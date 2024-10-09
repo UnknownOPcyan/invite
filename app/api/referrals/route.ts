@@ -1,3 +1,4 @@
+// app/api/referrals/route.ts
 import { getReferrals, getReferrer, saveReferral } from '@/lib/storage';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -8,7 +9,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Missing userId, referrerId, or name' }, { status: 400 });
   }
 
-  saveReferral(userId, referrerId, name);
+  await saveReferral(userId, referrerId, name);
   return NextResponse.json({ success: true });
 }
 
@@ -19,8 +20,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Missing userId' }, { status: 400 });
   }
 
-  const referrals = getReferrals(userId);
-  const referrer = getReferrer(userId);
+  const referrals = await getReferrals(userId);
+  const referrer = await getReferrer(userId);
 
   return NextResponse.json({ referrals, referrer });
 }
