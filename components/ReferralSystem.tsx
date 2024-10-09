@@ -46,13 +46,13 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
     fetchReferrals();
   }, [userId, startParam])
 
-  const handleInviteFriend = () => {
-    const utils = initUtils()
-    const inviteLink = `${INVITE_URL}?startapp=${userId}`
-    const shareText = `Join me on this awesome Telegram mini app!`
-    const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`
-    utils.openTelegramLink(fullUrl)
-  }
+const handleInviteFriend = () => {
+  const utils = initUtils();
+  const inviteLink = `https://t.me/referral_showcase_bot?start=${userId}`;
+  const shareText = `Join me on this awesome Telegram mini app!`;
+  const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`;
+  utils.openTelegramLink(fullUrl);
+};
 
   const handleCopyLink = () => {
     const inviteLink = `${INVITE_URL}?startapp=${userId}`
