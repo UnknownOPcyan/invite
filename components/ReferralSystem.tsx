@@ -12,7 +12,7 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
   const [referrer, setReferrer] = useState<string | null>(null)
   const [friends, setFriends] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState('referrals')
-  const INVITE_URL = `https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME}?start=`;
+  const INVITE_URL = `https://t.me/NazunaX_bot?start=`;
 
   useEffect(() => {
     const checkReferral = async () => {
