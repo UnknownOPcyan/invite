@@ -10,7 +10,7 @@ interface ReferralSystemProps {
 const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, startParam }) => {
   const [referrals, setReferrals] = useState<string[]>([])
   const [referrer, setReferrer] = useState<string | null>(null)
-  const [friends, setFriends] = useState([])
+  const [friends, setFriends] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState('home')
   const INVITE_URL = "https://t.me/referral_showcase_bot/start"
 
@@ -116,7 +116,7 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
               <h2 className="text-2xl font-bold mb-4">Your Referrals</h2>
               <ul>
                 {referrals.map((referral, index) => (
-                  <li key={index} className="bg-gray -100 p-2 mb-2 rounded">
+                  <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
                     User {referral}
                   </li>
                 ))}
@@ -127,18 +127,14 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
       )}
       {activeTab === 'friends' && (
         <div>
-          {friends.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-4">Friends</h2>
-              <ul>
-                {friends.map((friend, index) => (
-                  <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
-                    User {friend}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <h2 className="text-2xl font-bold mb-4">Friends</h2>
+          <ul>
+            {friends.map((friend, index) => (
+              <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
+                User {friend}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
     </div>
