@@ -1,3 +1,6 @@
+// lib/storage.ts
+import Invitation from '../models/invitation.model';
+
 let referralId = 1;
 
 interface ReferralData {
@@ -10,19 +13,21 @@ let storage: ReferralData = {
   referredBy: {},
 };
 
-export function saveReferral(userId: string, referrerId: string, name: string) {
-  if (!storage.referrals[referrerId]) {
-    storage.referrals[referrerId] = [];
-  }
+export async function saveReferral(userId: string, referrerId: string, name: string) {
+  const invitation = new Invitation({ userId, referrerId, name });
+  await invitation.save();
+  storage.referrals[referrerId] = storage.referrals[referrerId] || [];
   storage.referrals[referrerId].push({ id: referralId, name });
   storage.referredBy[userId] = referrerId;
   referralId++;
 }
 
-export function getReferrals(userId: string) {
-  return storage.referrals[userId] || [];
+export async function getReferrals(userId: string) {
+  const invitations = await Invitation.find({ referrerId: userId });
+  return invitations.map((invitation) => ({ id: invitation._id, name: invitation.name }));
 }
 
-export function getReferrer(userId: string) {
-  return storage.referredBy[userId] || null;
+export async function getReferrer(userId: string) {
+  const invitation = await Invitation.findOne({ userId });
+  return invitation ? invitation.referrerId : null;
 }
