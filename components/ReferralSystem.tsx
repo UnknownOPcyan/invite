@@ -11,8 +11,7 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
   const [referrals, setReferrals] = useState<string[]>([])
   const [referrer, setReferrer] = useState<string | null>(null)
   const [friends, setFriends] = useState<string[]>([])
-  const [activeTab, setActiveTab] = useState('home')
-  const INVITE_URL = "https://t.me/referral_showcase_bot/start"
+  const INVITE_URL = `https://t.me/${process.env.NEXT_PUBLIC_BOT_USERNAME}?start=`;
 
   useEffect(() => {
     const checkReferral = async () => {
@@ -64,69 +63,51 @@ const ReferralSystem: React.FC<ReferralSystemProps> = ({ initData, userId, start
 
   const handleInviteFriend = () => {
     const utils = initUtils()
-    const inviteLink = `${INVITE_URL}?startapp=${userId}`
+    const inviteLink = `${INVITE_URL}${userId}`
     const shareText = `Join me on this awesome Telegram mini app!`
     const fullUrl = `https://t.me/share/url?url=${encodeURIComponent(inviteLink)}&text=${encodeURIComponent(shareText)}`
     utils.openTelegramLink(fullUrl)
   }
 
   const handleCopyLink = () => {
-    const inviteLink = `${INVITE_URL}?startapp=${userId}`
+    const inviteLink = `${INVITE_URL}${userId}`
     navigator.clipboard.writeText(inviteLink)
     alert('Invite link copied to clipboard!')
   }
 
   return (
     <div className="w-full max-w-md">
-      <div className="flex justify-center mb-4">
+      {referrer && (
+        <p className="text-green-500 mb-4">You were referred by user {referrer}</p>
+      )}
+      <div className="flex flex-col space-y-4">
         <button
-          className={`px-4 py-2 rounded ${activeTab === 'home' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}
-          onClick={() => setActiveTab('home')}
+          onClick={handleInviteFriend}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Home
+          Invite Friend
         </button>
         <button
-          className={`px-4 py-2 rounded ${activeTab === 'friends' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'}`}
-          onClick={() => setActiveTab('friends')}
+          onClick={handleCopyLink}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         >
-          Friends
+          Copy Invite Link
         </button>
       </div>
-      {activeTab === 'home' && (
-        <div>
-          {referrer && (
-            <p className="text-green-500 mb-4">You were referred by user {referrer}</p>
-          )}
-          <div className="flex flex-col space-y-4">
-            <button
-              onClick={handleInviteFriend}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Invite Friend
-            </button>
-            <button
-              onClick={handleCopyLink}
-              className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Copy Invite Link
-            </button>
-          </div>
-          {referrals.length > 0 && (
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold mb-4">Your Referrals</h2>
-              <ul>
-                {referrals.map((referral, index) => (
-                  <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
-                    User {referral}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+      {referrals.length > 0 && (
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold mb-4">Your Referrals</h2>
+          <ul>
+            {referrals.map((referral, index) => (
+              <li key={index} className="bg-gray-100 p-2 mb-2 rounded">
+                User {referral}
+              </li>
+            ))}
+          </ul>
         </div>
       )}
-      {activeTab === 'friends' && (
-        <div>
+      {friends.length > 0 && (
+        <div className="mt-8">
           <h2 className="text-2xl font-bold mb-4">Friends</h2>
           <ul>
             {friends.map((friend, index) => (
