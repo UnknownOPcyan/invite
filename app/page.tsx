@@ -4,9 +4,10 @@ import ReferralSystem from '@/components/ReferralSystem'
 import { useEffect, useState } from 'react'
 
 export default function Home() {
-  const [initData, setInitData] = useState('')
-  const [userId, setUserId] = useState('')
-  const [startParam, setStartParam] = useState('')
+  const [initData, setInitData] = useState('');
+  const [userId, setUserId] = useState('');
+  const [startParam, setStartParam] = useState('');
+  const [friends, setFriends] = useState([]);
 
   useEffect(() => {
     const initWebApp = async () => {
@@ -20,12 +21,37 @@ export default function Home() {
     };
 
     initWebApp();
-  }, [])
+  }, []);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      if (userId) {
+        try {
+          const response = await fetch(`/api/referrals?userId=${userId}`);
+          if (!response.ok) throw new Error('Failed to fetch referrals');
+          const data = await response.json();
+          setFriends(data.referrals);
+        } catch (error) {
+          console.error('Error fetching referrals:', error);
+        }
+      }
+    };
+
+    fetchFriends();
+  }, [userId]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
       <h1 className="text-4xl font-bold mb-8">Telegram Referral Demo</h1>
       <ReferralSystem initData={initData} userId={userId} startParam={startParam} />
+      <h2 className="text-2xl font-bold mb-4">Friends</h2>
+      <ul>
+        {friends.map((friend, index) => (
+          <li key={index } className="bg-gray-100 p-2 mb-2 rounded">
+            {friend.name} ({friend.id})
+          </li>
+        ))}
+      </ul>
     </main>
-  )
+  );
 }
