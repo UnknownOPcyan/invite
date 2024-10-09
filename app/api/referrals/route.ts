@@ -2,13 +2,13 @@ import { getReferrals, getReferrer, saveReferral } from '@/lib/storage';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
-  const { userId, referrerId } = await request.json();
-  
-  if (!userId || !referrerId) {
-    return NextResponse.json({ error: 'Missing userId or referrerId' }, { status: 400 });
+  const { userId, referrerId, name } = await request.json();
+
+  if (!userId || !referrerId || !name) {
+    return NextResponse.json({ error: 'Missing userId, referrerId, or name' }, { status: 400 });
   }
 
-  saveReferral(userId, referrerId);
+  saveReferral(userId, referrerId, name);
   return NextResponse.json({ success: true });
 }
 
